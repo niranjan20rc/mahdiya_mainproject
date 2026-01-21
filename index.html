@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Text to PDF Generator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f4f4;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        input, textarea, button {
+            width: 90%;
+            max-width: 600px;
+            margin-bottom: 15px;
+            padding: 10px;
+            font-size: 16px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            box-sizing: border-box;
+        }
+
+        button {
+            background: #007BFF;
+            color: white;
+            border: none;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        button:hover {
+            background: #0056b3;
+        }
+
+        @media (max-width: 480px) {
+            textarea {
+                height: 150px;
+            }
+            input, textarea, button {
+                font-size: 14px;
+                padding: 8px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>Text to PDF Generator</h1>
+    
+    <input type="text" id="fileName" placeholder="Enter PDF file name (without extension)">
+    <textarea id="textInput" placeholder="Type your text here..."></textarea>
+    <button onclick="generatePDF()">Generate PDF</button>
+
+    <!-- jsPDF library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script>
+        async function generatePDF() {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+
+            const text = document.getElementById('textInput').value.trim();
+            let fileName = document.getElementById('fileName').value.trim();
+
+            if (!text) {
+                alert("Please enter some text first!");
+                return;
+            }
+
+            if (!fileName) {
+                fileName = "generated"; // default name
+            }
+
+            // Split text to fit page width
+            const lines = doc.splitTextToSize(text, 180);
+            doc.text(lines, 15, 20);
+
+            // Save the PDF with user-given filename
+            doc.save(fileName + ".pdf");
+        }
+    </script>
+</body>
+</html>
